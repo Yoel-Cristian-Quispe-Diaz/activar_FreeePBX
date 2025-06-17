@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activación de FreePBX y Creación de Usuarios - Guía Educativa</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        
+        .header h1 {
+            color: #2c3e50;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header .subtitle {
+            color: #7f8c8d;
+            font-size: 1.2em;
+            font-style: italic;
+        }
+        
+        .intro-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+            border-left: 5px solid #27ae60;
+        }
+        
+        .intro-card h2 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .intro-card h2::before {
+            content: "🚀";
+            font-size: 1.2em;
+        }
+        
+        .section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+        }
+        
+        .section-title {
+            color: #2c3e50;
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #27ae60;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .activation-title::before { content: "⚡"; }
+        .users-title::before { content: "👥"; }
+        
+        .step {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+            border-left: 4px solid #27ae60;
+            transition: all 0.3s ease;
+        }
+        
+        .step:hover {
+            background: #e8f5e8;
+            border-left-color: #27ae60;
+            transform: translateX(5px);
+        }
+        
+        .step-number {
+            background: linear-gradient(135deg, #27ae60, #219a52);
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 15px;
+            font-size: 1.1em;
+        }
+        
+        .step-content {
+            display: inline-block;
+            vertical-align: top;
+            width: calc(100% - 50px);
+        }
+        
+        .step-title {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 8px;
+            font-size: 1.1em;
+        }
+        
+        .image-container {
+            text-align: center;
+            margin: 20px 0;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border: 2px solid #e9ecef;
+        }
+        
+        .image-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .image-container img:hover {
+            transform: scale(1.05);
+        }
+        
+        .image-caption {
+            margin-top: 10px;
+            font-style: italic;
+            color: #6c757d;
+            font-size: 0.9em;
+        }
+        
+        .warning {
+            background: linear-gradient(135deg, #fff5cd, #ffeaa7);
+            border: 1px solid #fdcb6e;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 5px solid #f39c12;
+        }
+        
+        .warning::before {
+            content: "⚠️ ";
+            font-size: 1.2em;
+            margin-right: 10px;
+        }
+        
+        .warning-title {
+            font-weight: bold;
+            color: #e67e22;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+        
+        .success {
+            background: linear-gradient(135deg, #d4edda, #c3e6cb);
+            border: 1px solid #a3d977;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 5px solid #27ae60;
+        }
+        
+        .success::before {
+            content: "✅ ";
+            font-size: 1.2em;
+            margin-right: 10px;
+        }
+        
+        .optional {
+            background: linear-gradient(135deg, #e8f4f8, #d1ecf1);
+            border: 1px solid #bee5eb;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 5px solid #17a2b8;
+        }
+        
+        .optional::before {
+            content: "💡 ";
+            font-size: 1.2em;
+            margin-right: 10px;
+        }
+        
+        .optional-title {
+            font-weight: bold;
+            color: #17a2b8;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+        
+        .highlight {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+            border-left: 4px solid #6c757d;
+        }
+        
+        .highlight strong {
+            color: #2c3e50;
+        }
+        
+        .final-note {
+            background: linear-gradient(135deg, #e8f5e8, #d4edda);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            text-align: center;
+            border-left: 5px solid #27ae60;
+        }
+        
+        .final-note::before {
+            content: "🎯 ";
+            font-size: 1.5em;
+            margin-right: 10px;
+        }
+        
+        .apply-config-btn {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 5px;
+            font-weight: bold;
+            display: inline-block;
+            margin: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .section {
+                padding: 20px;
+            }
+            
+            .step {
+                padding: 15px;
+            }
+            
+            .step-content {
+                width: 100%;
+                margin-top: 10px;
+            }
+            
+            .step-number {
+                display: block;
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 Activación de FreePBX y Usuarios</h1>
+            <div class="subtitle">Configuración completa del sistema</div>
+        </div>
+        
+        <div class="intro-card">
+            <h2>¡Continuamos con la Configuración!</h2>
+            <p>Perfecto equipo, ya tenemos FreePBX instalado. Ahora vamos a activar el servidor y crear nuestros primeros usuarios. Este es el momento donde nuestro sistema cobra vida y podemos empezar a hacer llamadas. ¡Sigamos adelante con entusiasmo!</p>
+        </div>
+        
+        <div class="section">
+            <h2 class="section-title activation-title">Activación del Servidor</h2>
+            
+            <div class="step">
+                <span class="step-number">1</span>
+                <div class="step-content">
+                    <div class="step-title">Acceder a la interfaz web</div>
+                    <p>Después de iniciar el sistema en nuestra máquina virtual y obtener la IP, vamos a ingresarla en el navegador. Nos aparecerá un formulario donde debemos rellenar los datos necesarios: <strong>Username</strong>, <strong>Password</strong>, <strong>Confirm Password</strong> y <strong>Notification Email Address</strong>.</p>
+                    <div class="image-container">
+                        <img src="10.png" alt="Formulario de creación de cuenta inicial">
+                        <div class="image-caption">Formulario de creación de cuenta inicial en FreePBX</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="step">
+                <span class="step-number">2</span>
+                <div class="step-content">
+                    <div class="step-title">Ingresar a la administración</div>
+                    <p>Una vez creada la cuenta, seleccionamos la opción <strong>"FreePBX Administration"</strong> e ingresamos con el usuario que acabamos de crear.</p>
+                    <div class="image-container">
+                        <img src="11.png" alt="Pantalla de login de FreePBX Administration">
+                        <div class="image-caption">Pantalla de acceso a FreePBX Administration</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="step">
+                <span class="step-number">3</span>
+                <div class="step-content">
+                    <div class="step-title">Iniciar activación</div>
+                    <p>Al ingresar, el sistema nos pedirá activar el servidor. Simplemente seleccionamos <strong>"Activate"</strong> para continuar.</p>
+                    <div class="image-container">
+                        <img src="12.png" alt="Pantalla de activación del servidor">
+                        <div class="image-caption">Pantalla inicial de activación del servidor</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="step">
+                <span class="step-number">4</span>
+                <div class="step-content">
+                    <div class="step-title">Completar formulario de activación</div>
+                    <p>Ahora necesitamos poner cualquier dirección de correo medianamente realista para que se despliegue el resto del formulario. Ingresamos los datos necesarios en todos los campos (no hace falta que sean datos reales, pero deben estar completos). Una vez llenado todo, seleccionamos <strong>"Activate"</strong>.</p>
+                    <div class="image-container">
+                        <img src="13.png" alt="Formulario completo de activación">
+                        <div class="image-caption">Formulario de activación con todos los campos requeridos</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="step">
+                <span class="step-number">5</span>
+                <div class="step-content">
+                    <div class="step-title">Confirmar activación</div>
+                    <p>El sistema nos pedirá una confirmación final para activar. Seleccionamos <strong>"Activate"</strong> una vez más.</p>
+                    <div class="image-container">
+                        <img src="14.png" alt="Confirmación de activación">
+                        <div class="image-caption">Pantalla de confirmación final de activación</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="optional">
+                <div class="optional-title">Paso Opcional - Firewall (No Recomendado)</div>
+                <p>Después de activar, el sistema nos sugerirá activar el firewall especial. <strong>No recomendamos activarlo</strong> ya que puede generar errores en el servidor. Por tanto, seleccionamos la opción <strong>"Abort"</strong>.</p>
+                <div class="image-container">
+                    <img src="15.png" alt="Opción de firewall no recomendada">
+                    <div class="image-caption">Sugerencia de firewall - seleccionar "Abort"</div>
+                </div>
+            </div>
+            
+            <div class="step">
+                <span class="step-number">6</span>
+                <div class="step-content">
+                    <div class="step-title">Aplicar configuración</div>
+                    <p>¡Ya casi completamos la activación! Como en otros servidores VoIP, hay un botón para aplicar los cambios. En FreePBX se encuentra en la esquina superior derecha, en color rojo con el texto <span class="apply-config-btn">"Apply Config"</span>. Debemos seleccionarlo para completar la activación y también para cualquier cambio que realicemos después.</p>
+                    <div class="image-container">
+                        <img src="16.png" alt="Botón Apply Config">
+                        <div class="image-caption">Botón "Apply Config" en la esquina superior derecha</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2 class="section-title users-title">Creación de Usuarios</h2>
+            
+            <div class="step">
+                <span class="step-number">1</span>
+                <div class="step-content">
+                    <div class="step-title">Buscar Extensions</div>
+                    <p>En la esquina superior derecha, hacemos clic en el buscador y buscamos la opción <strong>"Extensions"</strong>.</p>
+                    <div class="image-container">
+                        <img src="17.png" alt="Buscador de Extensions">
+                        <div class="image-caption">Buscador con la opción "Extensions"</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="step">
+                <span class="step-number">2</span>
+                <div class="step-content">
+                    <div class="step-title">Agregar nueva extensión</div>
+                    <p>Una vez en el apartado <strong>"Extensions"</strong>, seleccionamos la opción <strong>"Add Extension"</strong> y luego seleccionamos <strong>"Add New SIP [chan_pjsip] Extension"</strong>.</p>
+                    <div class="image-container">
+                        <img src="18.png" alt="Opciones para agregar extensión">
+                        <div class="image-caption">Menú para agregar nueva extensión SIP</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="step">
+                <span class="step-number">3</span>
+                <div class="step-content">
+                    <div class="step-title">Configurar datos del usuario</div>
+                    <p>Ahora podemos agregar los datos del usuario. Los campos esenciales que necesitamos completar son:</p>
+                    <div class="highlight">
+                        <strong>• User Extension:</strong> El número de la extensión<br>
+                        <strong>• Display Name:</strong> El nombre que se mostrará<br>
+                        <strong>• Secret:</strong> La contraseña para el usuario
+                    </div>
+                    <div class="image-container">
+                        <img src="19.png" alt="Formulario de configuración de usuario">
+                        <div class="image-caption">Formulario de configuración de nueva extensión</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="step">
+                <span class="step-number">4</span>
+                <div class="step-content">
+                    <div class="step-title">Aplicar cambios</div>
+                    <p>Una vez que hayamos agregado todos los usuarios que necesitamos, aplicamos los cambios con <span class="apply-config-btn">"Apply Config"</span>.</p>
+                    <div class="image-container">
+                        <img src="20.png" alt="Aplicar configuración de usuarios">
+                        <div class="image-caption">Aplicar cambios después de crear usuarios</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="step">
+                <span class="step-number">5</span>
+                <div class="step-content">
+                    <div class="step-title">Probar el funcionamiento</div>
+                    <p>¡Ahora viene la parte más emocionante! Utilizamos algún softphone como <strong>Zoiper</strong> o <strong>Linphone</strong> para probar el funcionamiento de nuestras extensiones. Configuramos los softphones con los datos que acabamos de crear y ¡ya podemos hacer nuestras primeras llamadas!</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="final-note">
+            <strong>¡Felicitaciones Equipo!</strong><br>
+            Hemos completado exitosamente la activación del servidor FreePBX y la creación de usuarios. Ahora tenemos un sistema de telefonía completamente funcional. ¡Es hora de hacer algunas llamadas de prueba!
+        </div>
+    </div>
+</body>
+</html>
